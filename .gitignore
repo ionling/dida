@@ -24,3 +24,6 @@ dida-*.tar
 
 
 .elixir_ls
+.cookie
+
+dida.db3
