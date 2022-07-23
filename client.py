@@ -6,9 +6,10 @@ from model import Task
 
 class Client:
     _api_v2 = "https://api.dida365.com/api/v2"
+    user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36 Edg/103.0.1264.62"
 
     def __init__(self, cookie: str):
-        headers = {"cookie": cookie}
+        headers = {"cookie": cookie, "user-agent": self.user_agent}
         self._client = httpx.Client(headers=headers)
 
     def close(self):
