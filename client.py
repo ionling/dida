@@ -15,6 +15,9 @@ class Client:
     def close(self):
         self._client.close()
 
+    def request(self, method: str, url: str):
+        return self._client.request(method, url)
+
     def list_projects(self):
         url = f"{self._api_v2}/projects"
         r = self._client.get(url)
@@ -42,8 +45,8 @@ class Client:
 
     @staticmethod
     def _task_from_json(j: dict) -> Task:
-        created_at = arrow.get(j["createdTime"]).datetime
-        schedule = arrow.get(j["startDate"]).datetime
+        created_at = arrow.get(j["createdTime"]).to("local").datetime
+        schedule = arrow.get(j["startDate"]).to("local").datetime
         return Task(
             id=j["id"],
             project_id=j.get("projectId", ""),
