@@ -29,7 +29,7 @@ class Client:
         url = url.replace("08:00", "0800")
         r = self._client.get(url)
         r.raise_for_status()
-        return [self._task_from_json(i) for i in r.json()]
+        return [task_from_json(i) for i in r.json()]
 
     def delete_task(
         self,
@@ -43,16 +43,16 @@ class Client:
         )
         r.raise_for_status()
 
-    @staticmethod
-    def _task_from_json(j: dict) -> Task:
-        created_at = arrow.get(j["createdTime"]).to("local").datetime
-        schedule = arrow.get(j["startDate"]).to("local").datetime
-        return Task(
-            id=j["id"],
-            project_id=j.get("projectId", ""),
-            title=j["title"],
-            content=j.get("content", ""),  # content may not exit
-            done=bool(j.get("completedTime", "")),
-            schedule=schedule,
-            created_at=created_at,
-        )
+
+def task_from_json(j: dict) -> Task:
+    created_at = arrow.get(j["createdTime"]).to("local").datetime
+    schedule = arrow.get(j["startDate"]).to("local").datetime
+    return Task(
+        id=j["id"],
+        project_id=j.get("projectId", ""),
+        title=j["title"],
+        content=j.get("content", ""),  # content may not exit
+        done=bool(j.get("completedTime", "")),
+        schedule=schedule,
+        created_at=created_at,
+    )

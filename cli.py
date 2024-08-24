@@ -1,10 +1,11 @@
 import json
+import sys
 
 import arrow
 import typer
 
 import dao
-from client import Client
+from client import Client, task_from_json
 
 COOKIE_FILE = ".cookie"
 
@@ -15,13 +16,13 @@ def get_cookie() -> str:
 
 
 app = typer.Typer()
-client = Client(get_cookie())
+clt = Client(get_cookie())
 
 
 @app.command()
 def to_file(file: str, url: str):
     """Download the JSON from the URL and save it to a file."""
-    r = client.request("GET", url)
+    r = clt.request("GET", url)
     with open(file, "w") as f:
         f.write(json.dumps(r.json(), indent=2))
 
@@ -29,7 +30,7 @@ def to_file(file: str, url: str):
 @app.command()
 def archive(months_ago: int = 1):
     now = arrow.now()
-    tasks = client.list_tasks(now.shift(months=-months_ago), now)
+    tasks = clt.list_tasks(now.shift(months=-months_ago), now)
     tasks = list(filter(lambda x: not x.done, tasks))
     batch_size = 30
     while True:
@@ -65,12 +66,21 @@ def archive(months_ago: int = 1):
 
             t = batch[index]
             if op == "delete":
-                client.delete_task(t.project_id, t.id)
+                clt.delete_task(t.project_id, t.id)
                 typer.secho(f"Deleted {index} {t.title}", fg="red")
             else:
                 dao.create_task(t)
-                client.delete_task(t.project_id, t.id)
+                clt.delete_task(t.project_id, t.id)
                 typer.secho(f"Archived {index} {t.title}", fg="green")
+
+
+@app.command()
+def add_json():
+    """Parse the task JSON from stdin and save it."""
+    s = sys.stdin.read()
+    j = json.loads(s)
+    t = task_from_json(j)
+    dao.create_task(t)
 
 
 if __name__ == "__main__":
@@ -78,4 +88,4 @@ if __name__ == "__main__":
         app()
     finally:
         # Fix `TypeError: 'NoneType' object is not callable`
-        client.close()
+        clt.close()
