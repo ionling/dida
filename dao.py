@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pony.orm import *
+from pony.orm import Database, Optional, PrimaryKey, Required, db_session, select
 
 import model
 
@@ -15,6 +15,7 @@ class Task(db.Entity):
     content = Optional(str, default="")
     schedule = Optional(datetime)
     created_at = Optional(datetime, default=datetime.now())
+    col_created_at = Optional(datetime, default=datetime.now().astimezone())
 
     _table_ = "taskn"
 
