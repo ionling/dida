@@ -1,3 +1,17 @@
+* dida
+
+** Introduction
+
 - 简单的滴答清单工具, 提供归档, 删除等功能. (归档到 SQLite)
 - 参考: https://github.com/st1ven/Dida365Api/blob/master/ticktick.php
+
+** Python version
+#+begin_src sh
+  pipenv install
+  pipenv shell
+  python3 cli.py
+#+end_src
+
+** Elixir version
+
 - 运行: =mix run=

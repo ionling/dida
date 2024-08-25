@@ -1,22 +1,18 @@
+from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from enum import Enum, auto
 
 
+class TaskStatus(Enum):
+    ABANDONED = auto()
+
+
+@dataclass
 class Task:
-    def __init__(
-        self,
-        id="",
-        project_id="",
-        title="",
-        content="",
-        done=False,
-        schedule: Optional[datetime] = None,
-        created_at: Optional[datetime] = None,
-    ) -> None:
-        self.id = id
-        self.project_id = project_id
-        self.title = title
-        self.content = content
-        self.done = done
-        self.schedule = schedule
-        self.created_at = created_at
+    id: str
+    title: str
+    schedule: datetime
+    created_at: datetime
+    project_id: str = ""
+    content: str = ""
+    done: bool = False

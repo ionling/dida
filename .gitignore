@@ -26,4 +26,7 @@ dida-*.tar
 .elixir_ls
 .cookie
 
+
+__pycache__
+
 dida.db3

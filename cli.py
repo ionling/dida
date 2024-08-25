@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import sys
 
@@ -32,6 +33,7 @@ def archive(months_ago: int = 1):
     now = arrow.now()
     tasks = clt.list_tasks(now.shift(months=-months_ago), now)
     tasks = list(filter(lambda x: not x.done, tasks))
+    tasks.sort(key=lambda x: x.schedule)
     batch_size = 30
     while True:
         batch, tasks = tasks[:batch_size], tasks[batch_size:]
@@ -41,8 +43,11 @@ def archive(months_ago: int = 1):
         for i, t in enumerate(batch):
             # TODO: Pretty with table
             print(
-                f"Created at: {t.created_at.date()}, Index: {i:2}, "
-                f"Title: {t.title}, Content: {t.content}"
+                f"Created at: {t.created_at}, "
+                f"Schedule: {t.schedule}, "
+                f"Index: {i:2}, "
+                f"Title: {t.title}",
+                f"Content: {t.content}",
             )
 
         while True:
@@ -81,6 +86,13 @@ def add_json():
     j = json.loads(s)
     t = task_from_json(j)
     dao.create_task(t)
+
+
+@app.command()
+def random(n: int = 10):
+    """Display some random tasks"""
+    for t in dao.random(n):
+        print(t)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,12 @@
 from datetime import datetime
 
-from pony.orm import Database, Optional, PrimaryKey, Required, db_session, select
+from pony.orm import (
+    Database,
+    Optional,
+    PrimaryKey,
+    Required,
+    db_session,
+)
 
 import model
 
@@ -23,6 +29,21 @@ class Task(db.Entity):
 @db_session
 def create_task(t: model.Task):
     Task(title=t.title, content=t.content, schedule=t.schedule, created_at=t.created_at)
+
+
+@db_session
+def random(limit=10) -> list[model.Task]:
+    q = Task.select_random(limit)
+    return [
+        model.Task(
+            id=t.id,
+            title=t.title,
+            content=t.content,
+            schedule=t.schedule,
+            created_at=t.created_at,
+        )
+        for t in q
+    ]
 
 
 db.bind(provider="sqlite", filename=DB_FILE)

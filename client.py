@@ -1,5 +1,6 @@
 import arrow
 import httpx
+from loguru import logger
 
 from model import Task
 
@@ -27,8 +28,16 @@ class Client:
         # https://api.dida365.com/api/v2/date/2021-08-01T00:00:00.000+0800/to/2021-09-05T00:00:00.000+0800/tasks?timezone=
         url = f"{self._api_v2}/date/{start}/to/{end}/tasks"
         url = url.replace("08:00", "0800")
-        r = self._client.get(url)
-        r.raise_for_status()
+        ctxl = logger.bind(url=url)
+        ctxl.debug("http get")
+        try:
+            r = self._client.get(url)
+            r.raise_for_status()
+        except httpx.HTTPStatusError as e:
+            ctxl.bind(
+                status=e.response.status_code, content=e.response.content
+            ).warning("bad status")
+            raise e
         return [task_from_json(i) for i in r.json()]
 
     def delete_task(
