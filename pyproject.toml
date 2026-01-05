@@ -9,7 +9,7 @@ dependencies = [
     "httpx==0.28.1",
     "arrow==1.2.2",
     "pony==0.7.16",
-    "loguru==0.6.0",
+    "loguru==0.7.3",
 ]
 
 [dependency-groups]
