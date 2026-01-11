@@ -8,7 +8,7 @@ dependencies = [
     "typer==0.21.0",
     "httpx==0.28.1",
     "arrow==1.2.2",
-    "pony==0.7.16",
+    "pony==0.7.19",
     "loguru==0.6.0",
 ]
 
