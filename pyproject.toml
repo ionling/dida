@@ -5,7 +5,7 @@ description = "Simple CLI for https://dida365.com."
 readme = "README.org"
 requires-python = ">=3.10"
 dependencies = [
-    "typer==0.21.0",
+    "typer==0.23.1",
     "httpx==0.28.1",
     "arrow==1.2.2",
     "pony==0.7.16",
